@@ -2,10 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Home from './pages/Home';
 import News from './pages/News';
-import Glossary from './pages/Glossary';
 import Themes from './pages/Themes';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import Glossary from './pages/Glossary';
+import PersonalFinance from './pages/glossary/PersonalFinance';
+import Taxation from './pages/glossary/Taxation';
+import Investing from './pages/glossary/Investing';
+import RetirementPlanning from './pages/glossary/RetirementPlanning';
+import Cryptocurrency from './pages/glossary/Cryptocurrency';
+
 
 function App() {
   const [user, setUser] = useState(null); // State to store the logged-in user
@@ -55,7 +61,12 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/news" element={<News />} />
-          <Route path="/glossary/*" element={<Glossary />} />
+          <Route path="/glossary" element={<Glossary />} />
+          <Route path="/glossary/personal-finance" element={<PersonalFinance />} />
+          <Route path="/glossary/taxation" element={<Taxation />} />
+          <Route path="/glossary/investing" element={<Investing />} />
+          <Route path="/glossary/retirement-planning" element={<RetirementPlanning />} />
+          <Route path="/glossary/cryptocurrency" element={<Cryptocurrency />} />
           <Route path="/themes" element={<Themes />} />
           <Route path="/login" element={<Login setUser={setUser} />} />
           <Route path="/signup" element={<Signup />} />
