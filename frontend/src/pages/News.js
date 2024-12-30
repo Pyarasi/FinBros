@@ -8,7 +8,7 @@ const News = () => {
 
   useEffect(() => {
     axios
-      .get('http://localhost:5001/api/news') // Update URL if deployed
+      .get('https://finbros-backend-cb6i2cd2e-pyarasis-projects.vercel.app/api/news') // Update URL if deployed
       .then((response) => {
         setNewsArticles(response.data);
         setLoading(false);

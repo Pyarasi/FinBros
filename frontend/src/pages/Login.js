@@ -11,7 +11,7 @@ const Login = ({ setUser }) => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5001/api/login', {
+      const response = await axios.post('https://finbros-backend-cb6i2cd2e-pyarasis-projects.vercel.app/api/login', {
         email,
         password,
       });
