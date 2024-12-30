@@ -1,54 +1,74 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import Home from './pages/Home';
+import News from './pages/News';
+import Glossary from './pages/Glossary';
 import Themes from './pages/Themes';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
 
 function App() {
-  const [articles, setArticles] = useState([]); // State to store articles
+  const [user, setUser] = useState(null); // State to store the logged-in user
 
-  // Fetch articles from the backend
+  // Check if user data exists in localStorage on initial render
   useEffect(() => {
-    axios
-      .get('http://localhost:5001/api/articles') // Replace with your backend URL if deployed
-      .then((response) => {
-        setArticles(response.data); // Update state with fetched articles
-      })
-      .catch((error) => {
-        console.error('Error fetching articles:', error);
-      });
-  }, []); // Empty dependency array means this runs once on component load
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser)); // Parse and set user data
+    }
+  }, []);
 
   return (
-    // Main container with DaisyUI's bg-base-100 for dynamic theme changes
-    <div className="min-h-screen bg-base-100">
+    <div className="min-h-screen bg-base-100 flex flex-col">
       <Router>
-        <nav className="p-5 bg-gray-800 text-white">
-          <Link to="/" className="mr-4">Home</Link>
-          <Link to="/themes">Themes</Link>
-        </nav>
+        {/* Navbar */}
+        <div className="navbar bg-gray-800 text-white">
+          <div className="flex-1">
+            <Link to="/" className="btn btn-ghost normal-case text-xl">
+              FinBros
+            </Link>
+          </div>
+          <div className="flex-none">
+            <Link to="/news" className="btn btn-ghost">News</Link>
+            <Link to="/glossary" className="btn btn-ghost">Glossary</Link>
+            <Link to="/themes" className="btn btn-primary">Themes</Link>
+            {!user ? (
+              <>
+                <Link to="/login" className="btn btn-ghost">Login</Link>
+                <Link to="/signup" className="btn btn-ghost">Sign Up</Link>
+              </>
+            ) : (
+              <button
+                className="btn btn-error"
+                onClick={() => {
+                  localStorage.removeItem('user');
+                  setUser(null);
+                }}
+              >
+                Logout
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Main Content */}
         <Routes>
-          <Route
-            path="/"
-            element={
-              <div className="p-5">
-                <h1 className="text-4xl font-bold mb-4">Welcome to FinBros</h1>
-                <h2 className="text-2xl mb-4">Finance Articles</h2>
-                <ul>
-                  {articles.map((article) => (
-                    <li key={article._id} className="mb-4">
-                      <h3 className="text-xl font-semibold">{article.title}</h3>
-                      <p className="text-gray-700">{article.content}</p>
-                      <p className="text-gray-500">
-                        <strong>Category:</strong> {article.category}
-                      </p>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            }
-          />
+          <Route path="/" element={<Home />} />
+          <Route path="/news" element={<News />} />
+          <Route path="/glossary/*" element={<Glossary />} />
           <Route path="/themes" element={<Themes />} />
+          <Route path="/login" element={<Login setUser={setUser} />} />
+          <Route path="/signup" element={<Signup />} />
         </Routes>
+
+        {/* Footer */}
+        <footer className="footer footer-center p-4 bg-gray-800 text-white mt-auto">
+          {user ? (
+            <p>Logged in as: {user.email}</p>
+          ) : (
+            <p>Welcome to FinBros. Please log in or sign up.</p>
+          )}
+        </footer>
       </Router>
     </div>
   );
